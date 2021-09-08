@@ -126,7 +126,7 @@ module.exports = function (RED) {
 
 
         // Process inputs
-        node.on('input', function (msg,send,done) {
+        node.on('input', function (msg) {
 
             var state = context.get('state', storeName) || node.defaultState;
             var queue = context.get('queue', storeName) || [];
@@ -139,7 +139,7 @@ module.exports = function (RED) {
                 switch (msg.payload.toString().toLowerCase()) {
                     case node.openCmd:
                         // flush then open
-                        send([queue]);
+                        node.send([queue]);
                         queue = [];
                         state = 'open';
                         break;
@@ -157,7 +157,7 @@ module.exports = function (RED) {
                             if (queue.length > 0) {
                                 //if the queue has been triggered, reset the timer
                                 timer.reset(this.inverval);
-                                send(queue.shift());
+                                node.send(queue.shift());
                             }
                         }
                         break;
@@ -165,7 +165,7 @@ module.exports = function (RED) {
                         // just show status, so do nothing here
                         break;
                     case node.flushCmd:
-                        send([queue]);
+                        node.send([queue]);
                     case node.resetCmd:
                         queue = [];
                         break;
@@ -195,16 +195,16 @@ module.exports = function (RED) {
                         queueStatus.shape = 'ring';
                         node.status(queueStatus);
                 }
-                send(null);
+                node.send(null);
                 
             } else {
                 // Process message
                 switch (state) {
                     case 'open':
-                        send(msg);
+                        node.send(msg);
                         break;
                     case 'closed':
-                        send(null);
+                        node.send(null);
                         break;
                     case 'queueing':
                         // Enqueue
@@ -217,7 +217,6 @@ module.exports = function (RED) {
                         node.error('Invalid state');
                 }
             }
-            done();
             
         })
     }
