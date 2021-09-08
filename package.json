@@ -1,0 +1,30 @@
+{
+  "name": "node-red-contrib-message-queue",
+  "version": "1.0.0",
+  "description": "Message queueing for Node-RED",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/airshipteam/node-red-contrib-message-queue"
+  },
+  "homepage": "https://github.com/airshipteam/node-red-contrib-message-queue",
+  "bugs": {
+    "url": "https://github.com/airshipteam/node-red-contrib-message-queue"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "node-red": {
+    "nodes": {
+      "message-queue": "message-queue/message-queue.js"
+    }
+  },
+  "keywords": [
+    "node-red",
+    "flow control",
+    "queue"
+  ],
+  "author": "Andre Guerra",
+  "license": "ISC",
+  "dependencies": {
+  }
+}
