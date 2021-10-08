@@ -35,7 +35,6 @@
             flushCmd: { value: "flush" },
             resetCmd: { value: "reset" },
             statusCmd: { value: "status" },
-            persist: { value: false },
             storeName: { value: RED.settings.context.default }
         },
         inputs: 1,
@@ -47,19 +46,6 @@
         },
         labelStyle: function () {
             return this.name ? "node_label_italic" : "";
-        },
-        oneditprepare: function () {
-            var node = this
-            RED.settings.context.stores.forEach(add)    // list context stores
-            function add(item) {
-                $('#node-input-storeName').append(`<option value="${item}">${item}</option>`)
-            }
-            $('#node-input-storeName').val(node.storeName)  // disable if not checked
-            $("#node-input-persist").on("change", function (e) {
-                $("#node-input-storeName").prop("disabled", !$(this).prop("checked"))
-            });
-            const version = "1.0.0";
-            $('#node-version').append(` ${version}`)
         }
     });
 </script>
@@ -83,13 +69,6 @@
         <option value="open"> open</option>
         <option value="closed"> closed</option>
     </select>
-    <span>&emsp;</span>
-    <label for="node-input-persist" style="width:25%; display:inline">
-        <input type="checkbox" id="node-input-persist"
-            style="display:inline-block; width:15px; vertical-align:baseline;">
-        <span>Restore from state saved in</span></label>
-    <select type="text" id="node-input-storeName" style="width:20%"> </select>
-    <i class="fa fa-database"></i>
 </div>
 <br />
 <!-- commands -->
@@ -159,9 +138,5 @@
     The effects of these commands and the status object displayed by the node are described on <a 
     href="https://github.com/drmibell/node-red-contrib-queue-gate">Github</a></p>
     <p>When first deployed or after a <code>default</code> command, the gate is in the state defined by <code>Default State</code>.<p>
-    <p>After a re-deploy or Node-RED restart, the node will enter the <code>Default State</code>,
-    unless the user has selected the <code>Restore from state saved in</code> option
-    (checkbox) in the edit dialog and has chosen a persistent form of context storage in the 
-    adjacent dropdown list. In that case, the node will enter the state it was in 
-    prior to the re-deploy or restart and will also restore the message queue.</p>
+    <p>After a re-deploy or Node-RED restart, the node will enter the <code>Default State</code>
 </script>
