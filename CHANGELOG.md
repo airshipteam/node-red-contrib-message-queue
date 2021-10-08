@@ -1,5 +1,5 @@
 #### 1.1.2: Timer consistency (08-10-2021)
-- Fixed a buf where the timer would not be killed by the browser, creating two instances of it
+- Fixed a bug where the timer would not be cleared by the browser, creating two instances of it
 - Removed the persistent option
 
 #### 1.1.0: Compatibility
