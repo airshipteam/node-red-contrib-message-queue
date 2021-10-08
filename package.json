@@ -1,6 +1,6 @@
 {
   "name": "node-red-contrib-message-queue",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "description": "Message queueing for Node-RED",
   "repository": {
     "type": "git",
@@ -23,8 +23,25 @@
     "flow control",
     "queue"
   ],
-  "author": "Andre Guerra",
+  "author": {
+      "name": "Andre Guerra",
+      "url": "https://github.com/andreguerra7"
+  },
+  "contributors": [
+    {
+      "name": "Michael.I. Bell"
+    },
+    {
+      "name": "Simon Walters",
+      "url": "https://github.com/cymplecy"
+    },
+    {
+      "name": "Colin Law",
+      "url": "https://github.com/colinl"
+    }
+  ],
   "license": "ISC",
   "dependencies": {
   }
+  
 }

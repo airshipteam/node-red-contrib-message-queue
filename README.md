@@ -12,5 +12,5 @@ From your Node-RED directory:
 
 Open the editor panel. Select your nodes.
 
-This is a work based on `queue-gate` [node-red-contrib-queue-gate](https://github.com/drmibell/node-red-contrib-queue-gate), with added ability to set an interval, so if the queue is on "queuing" mode it will trigger the next message every X milliseconds, also removed a few capabilities such as peek and drop.
+This is a work based on `queue-gate` [node-red-contrib-queue-gate](https://github.com/drmibell/node-red-contrib-queue-gate), with added ability to set an interval, so if the queue is on "queuing" mode it will trigger the next message every X milliseconds, this node have also removed a few capabilities such as peek and drop.
 

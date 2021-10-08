@@ -37,28 +37,25 @@ module.exports = function (RED) {
         this.statusCmd = (config.statusCmd || "status").toLowerCase();
         this.defaultCmd = config.defaultCmd.toLowerCase();
         this.defaultState = config.defaultState.toLowerCase();
-        this.persist = config.persist;
         this.storeName = config.storeName;
-       
+
         // Save "this" object
         var node = this;
         var context = node.context();
-        var persist = node.persist;
-        var storeName = node.storeName
-        var state = context.get('state', storeName);
-        var queue = context.get('queue', storeName);
-        
-        //set interval
-        this.interval = config.interval ? parseInt(config.interval) : 0;
-        var interval = node.interval ? parseInt(node.interval) : 0;
+        var storeName = node.storeName;
+        var state = context.get('state-context', storeName);
+        var queue = context.get('queue-context', storeName);
 
+        //set interval
+        this.interval = config.interval && config.interval > 0 ? parseInt(config.interval) : 0;
+        var interval = node.interval && node.interval > 0 ? parseInt(node.interval) : 0;
+
+        state = node.defaultState;
+        queue = [];
         
-        if (!persist || typeof state === 'undefined') {
-            state = node.defaultState;
-            queue = [];
-        }
-        context.set('state', state, storeName);
-        context.set('queue', queue, storeName);
+        context.set('state-context', state, storeName);
+        context.set('queue-context', queue, storeName);
+
         // Initialize status display
         switch (state) {
             case 'open':
@@ -104,32 +101,36 @@ module.exports = function (RED) {
             }
         }
 
-        var timer = new Timer(function () {
-            if (queue.length > 0 && state === 'queueing') {
-                node.send(queue.shift());
-                queueStatus.text = 'queuing: ' + queue.length;
-                queueStatus.shape = 'ring';
-                node.status(queueStatus);
-
-                context.set('state', state, storeName);
-                context.set('queue', queue, storeName);
-            }
-
-        }, interval);
 
         if (interval && interval > 0 && state === 'queueing') {
-            timer.start(interval);
-        } else {
-            timer.stop();
 
+            var timer = new Timer(function () {
+                if (queue.length > 0 ) {
+                    node.send(queue.shift());
+                    queueStatus.text = 'queuing: ' + queue.length;
+                    queueStatus.shape = 'ring';
+                    node.status(queueStatus);
+
+                    context.set('state-context', state, storeName);
+                    context.set('queue-context', queue, storeName);
+                }
+            }, interval);
+            
+            context.set('timer-context', timer, storeName);
         }
 
+
+        node.on('close', function () {
+            var timer = context.get('timer-context', storeName);
+            timer.stop();
+        });
 
         // Process inputs
         node.on('input', function (msg) {
 
-            var state = context.get('state', storeName) || node.defaultState;
-            var queue = context.get('queue', storeName) || [];
+            var state = context.get('state-context', storeName) || node.defaultState;
+            var queue = context.get('queue-context', storeName) || [];
+
             if (typeof msg.topic === 'string' &&
                 msg.topic.toLowerCase() === node.controlTopic) {
                 // Change state
@@ -154,11 +155,11 @@ module.exports = function (RED) {
                     case node.triggerCmd:
                         if (state === 'queueing') {
                             // Dequeue
-                            if (queue.length > 0) {
-                                //if the queue has been triggered, reset the timer
-                                timer.reset(this.inverval);
-                                node.send(queue.shift());
+                            var timer = context.get('timer-context', storeName);
+                            if (timer && this.interval && this.interval > 0) {
+                                timer.reset();
                             }
+                            node.send(queue.shift());
                         }
                         break;
                     case node.statusCmd:
@@ -177,11 +178,12 @@ module.exports = function (RED) {
                     default:
                         node.warn('Invalid command ignored');
                         break;
-                }
+                } 
+    
                 // Save state
-                context.set('state', state, storeName);
-                context.set('queue', queue, storeName);
-                
+                context.set('state-context', state, storeName);
+                context.set('queue-context', queue, storeName);
+
                 // Show status
                 switch (state) {
                     case 'open':
