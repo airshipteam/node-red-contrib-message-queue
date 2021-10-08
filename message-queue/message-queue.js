@@ -130,8 +130,6 @@ module.exports = function (RED) {
 
             var state = context.get('state-context', storeName) || node.defaultState;
             var queue = context.get('queue-context', storeName) || [];
-            // var state = context.get('state', storeName) || node.defaultState;
-            // var queue = context.get('queue', storeName) || [];
 
             if (typeof msg.topic === 'string' &&
                 msg.topic.toLowerCase() === node.controlTopic) {
