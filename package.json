@@ -15,8 +15,12 @@
   },
   "node-red": {
     "nodes": {
-      "message-queue": "message-queue/message-queue.js"
+      "message-queue": "message-queue/message-queue.js",
+      "version": ">=2.0.0"
     }
+  },
+  "engines": {
+    "node": ">=12.0.0"
   },
   "keywords": [
     "node-red",
