@@ -1,6 +1,6 @@
 {
   "name": "node-red-contrib-message-queue",
-  "version": "1.1.4",
+  "version": "1.1.5",
   "description": "Message queueing for Node-RED",
   "repository": {
     "type": "git",
@@ -16,7 +16,7 @@
   "node-red": {
     "nodes": {
       "message-queue": "message-queue/message-queue.js",
-      "version": ">=2.0.0"
+      "version": ">=1.1.1"
     }
   },
   "engines": {
